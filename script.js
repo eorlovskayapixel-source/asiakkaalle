@@ -11,5 +11,5 @@ async function login() {
   const hash = await sha1(password);
 
   // редирект
-  window.location.href = `./${hash}/pages/index_banner.html`;
+  window.location.href = `${hash}/pages/index_banner.html`;
 }
