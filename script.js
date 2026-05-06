@@ -10,6 +10,9 @@ async function login() {
   const password = document.getElementById("password").value;
   const hash = await sha1(password);
 
-  // редирект
-  window.location.href = `/${window.location.pathname.split('/')[1]}/${hash}/pages/index_banner.html`;
+  
+const repoName = window.location.pathname.split('/')[1];
+
+  window.location.href = `/${repoName}/${hash}/pages/index_banner.html`;
+
 }
