@@ -1,17 +1,442 @@
+<!doctype html>
+<html lang="fi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Karelia Next - Kysely</title>
+    <link rel="stylesheet" href="./styles/style_one_page.css" />
+  </head>
+  <body>
+    <div id="headerLayout"></div>
 
-<!DOCTYPE html>
-<html>
-<head>
-  <title>Login</title>
-</head>
-<body>
+    <div id="baseLayout"></div>
 
-<h2>Enter password</h2>
+    <main>
+      <!--------------------------------------- Progress bar --------------------------------------->
+      <div id="progress-bar-container">
+        <div id="progress-bar"></div>
+      </div>
+      <!--------------------------------------- Top banner image --------------------------------------->
+      <!------------------------------- Questionnaire block  ------------------------------------------->
+      <div class="page-wrapper">
+        <section class="recommendation-container">
+          <!--<div class="recommendation-header">
+            <h1 class="recommendation-title">Löydä oma polkusi yrittäjänä</h1>
+            <p class="recommendation-intro">
+              Valitse alla olevista kohdista, mikä kuvaa parhaiten tilannettasi
+              ja millaista tukea kaipaat.
+            </p>
+          </div>-->
 
-<input type="password" id="password">
-<button onclick="login()">Enter</button>
+          
+<div class="hero-banner">
+  <img src="./assets/banner1.png" alt="Taustakuva yrittäjyydestä" class="hero-image">
+  <div class="hero-overlay">
+    <h1 class="recommendation-title">Löydä oma polkusi yrittäjänä</h1>
+    <p class="recommendation-intro">
+              Valitse alla olevista kohdista, mikä kuvaa parhaiten tilannettasi
+              ja millaista tukea kaipaat.
+            </p>
+  </div>
+</div>
 
-<script src="script.js"></script>
 
-</body>
+          <form id="questionForm" class="question-form">
+            <div class="question-skeleton"></div>
+            <div class="question-skeleton"></div>
+            <div class="question-skeleton"></div>
+            <div class="question-skeleton"></div>
+            <div class="question-skeleton"></div>
+          </form>
+
+          <!------------------------------- Recommendation block  ------------------------------------------->
+          <!-- Suosituslistan pääkontti -->
+          <div id="myBlock" style="display: none">
+            <div id="recommendationDivider" class="divider"></div>
+            <!-- Suositusnäkymän yläosa:
+             sisältää otsikon, vaihetekstin ja johdannon -->
+            <div class="recommendation-header">
+              <!-- Otsikko täytetään JavaScriptillä -->
+              <h1 class="recommendation-title" id="recommendationTitle"></h1>
+
+              <!-- Vaiheteksti täytetään JavaScriptillä -->
+              <p class="recommendation-stage" id="recommendationStage"></p>
+
+              <!-- Johdantoteksti täytetään JavaScriptillä -->
+              <p class="recommendation-intro" id="recommendationIntro"></p>
+            </div>
+
+            <!-- Tähän alueeseen renderöidään suosituskortit JavaScriptillä -->
+            <div class="recommendation-list" id="recommendationList"></div>
+
+            <!-- Käyttäjän valintojen yhteenveto -->
+            <div class="recommendation-summary">
+              <h2 class="summary-title">Valintojesi yhteenveto</h2>
+
+              <!-- Yhteenvetotiedot täytetään JavaScriptillä -->
+              <ul class="summary-list" id="summaryList"></ul>
+            </div>
+            <!-- Toinen yhteydenottoboksi näytetään vasta suositusten jälkeen.
+            Tämä tarjoaa käyttäjälle luontevan seuraavan askeleen tulosten katsomisen jälkeen. -->
+            <section
+              class="contact-cta contact-cta--result"
+              id="contactCtaResult"
+              aria-labelledby="contactCtaResultTitle"
+              hidden
+            >
+              <div class="contact-cta__content">
+                <h2 class="contact-cta__title" id="contactCtaResultTitle">
+                  Haluatko keskustella suosituksista henkilökohtaisesti?
+                </h2>
+                <p class="contact-cta__text">
+                  Jos kaipaat lisätukea tai haluat keskustella vaihtoehdoista
+                  tarkemmin, voit lähettää yhteydenottopyynnön.
+                </p>
+              </div>
+
+              <!-- Tämä painike avaa saman modaalin kuin yläosan CTA -->
+              <button
+                type="button"
+                class="form-button form-button-primary contact-cta__button"
+                id="openContactModalResult"
+              >
+                Jätä yhteydenottopyyntö
+              </button>
+            </section>
+            <!-- Palautepainike näytetään vasta sen jälkeen,
+            kun käyttäjä on saanut suositukset ja voi arvioida työkalua. -->
+            <section
+              class="feedback-cta"
+              id="feedbackCta"
+              aria-labelledby="feedbackCtaTitle"
+              hidden
+            >
+              <div class="feedback-cta__content">
+                <!-- Palautekortin teksti ohjaa käyttäjää arvioimaan työkalun kokemusta
+              luonnollisemmalla ja vähän pehmeämmällä sanamuodolla. -->
+                <h2 class="feedback-cta__title" id="feedbackCtaTitle">
+                  Kerro meille miten onnistuimme auttamaan sinua!
+                </h2>
+                <p class="feedback-cta__text">
+                  Kerro lyhyesti, miten hyvin työkalu auttoi sinua ja mitä voisi
+                  vielä parantaa.
+                </p>
+              </div>
+
+              <!-- Tämä painike avaa palautelomakkeen modaalissa -->
+              <button
+                type="button"
+                class="form-button form-button-secondary feedback-cta__button"
+                id="openFeedbackModal"
+              >
+                Anna palautetta
+              </button>
+            </section>
+          </div>
+        </section>
+      </div>
+    </main>
+    <!-- Yhteydenottopyyntölomake modaalissa.
+     Modaali pitää lomakkeen helposti löydettävänä mutta pois jatkuvasta näkyvyydestä. -->
+    <div class="contact-modal" id="contactModal" aria-hidden="true" hidden>
+      <!-- Taustapeite sulkee modaalin, kun käyttäjä klikkaa sen ulkopuolelle -->
+      <div class="contact-modal__overlay" id="contactModalOverlay"></div>
+
+      <!-- Varsinainen modaalikortti -->
+      <section
+        class="contact-modal__dialog"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="contactModalTitle"
+      >
+        <div class="contact-modal__header">
+          <h2 class="contact-modal__title" id="contactModalTitle">
+            Jätä yhteydenottopyyntö
+          </h2>
+
+          <!-- Sulkupainike modaalin oikeassa yläkulmassa -->
+          <button
+            type="button"
+            class="contact-modal__close"
+            id="closeContactModal"
+            aria-label="Sulje yhteydenottolomake"
+          >
+            ×
+          </button>
+        </div>
+
+        <p class="contact-modal__intro">
+          Täytä alle sähköpostiosoitteesi ja kerro lyhyesti, millaista ohjausta
+          tarvitset.
+        </p>
+
+        <!-- Varsinainen yhteydenottolomake -->
+        <form id="contactRequestForm" class="contact-modal__form">
+          <label class="contact-modal__field">
+            <span class="contact-modal__label">Sähköposti</span>
+            <input
+              id="contactEmail"
+              name="contactEmail"
+              type="email"
+              autocomplete="email"
+              placeholder="etunimi.sukunimi@example.com"
+              required
+            />
+          </label>
+
+          <label class="contact-modal__field">
+            <span class="contact-modal__label">Kommentti</span>
+            <textarea
+              id="contactMessage"
+              name="contactMessage"
+              rows="5"
+              placeholder="Kerro lyhyesti, millaista ohjausta tarvitset."
+              required
+            ></textarea>
+          </label>
+
+          <div class="contact-modal__actions">
+            <button type="submit" class="form-button form-button-primary">
+              Lähetä yhteydenottopyyntö
+            </button>
+            <button type="reset" class="form-button form-button-secondary">
+              Tyhjennä kentät
+            </button>
+          </div>
+
+          <!-- Tähän näytetään käyttäjälle palaute lähetyksestä -->
+          <p
+            class="contact-modal__status"
+            id="contactRequestStatus"
+            aria-live="polite"
+          ></p>
+        </form>
+      </section>
+    </div>
+    <!-- Palautelomake modaalissa.
+     Käyttäjä voi arvioida työkalun ja kirjoittaa kommentin ilman,
+     että palaute vie pysyvästi tilaa sivulla. -->
+    <div class="feedback-modal" id="feedbackModal" aria-hidden="true" hidden>
+      <!-- Taustapeite sulkee modaalin, kun käyttäjä klikkaa sen ulkopuolelle -->
+      <div class="feedback-modal__overlay" id="feedbackModalOverlay"></div>
+
+      <!-- Varsinainen modaalikortti -->
+      <section
+        class="feedback-modal__dialog"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="feedbackModalTitle"
+      >
+        <div class="feedback-modal__header">
+          <!-- Modaalin otsikko pyritään pitämään luonnollisena ja käyttäjälle helposti ymmärrettävänä. -->
+          <h2 class="feedback-modal__title" id="feedbackModalTitle">
+            Kerro kokemuksestasi
+          </h2>
+
+          <!-- Sulkupainike modaalin oikeassa yläkulmassa -->
+          <button
+            type="button"
+            class="feedback-modal__close"
+            id="closeFeedbackModal"
+            aria-label="Sulje palautelomake"
+          >
+            ×
+          </button>
+        </div>
+
+        <!-- Johdanto kertoo käyttäjälle selkeästi, mitä palautteessa pyydetään. -->
+        <p class="feedback-modal__intro">
+          Arvioi työkalua tähtien avulla ja kirjoita halutessasi lyhyt palaute.
+        </p>
+
+        <!-- Palautelomake sisältää arvioinnin, kommentin ja lähetyspainikkeet -->
+        <form id="feedbackForm" class="feedback-modal__form">
+          <!-- Tähtiarviointi toteutetaan yhtenä tähtirivinä.
+        Radio-inputit jäävät taustalle logiikkaa varten,
+        mutta käyttäjä näkee yhden selkeän tähtivalitsimen. -->
+          <fieldset class="feedback-modal__field">
+            <legend class="feedback-modal__label">Tähtiarviointi</legend>
+
+            <div class="feedback-modal__rating-group">
+              <!-- Radio-inputit pidetään mukana, jotta nykyinen lomakelogiikka toimii edelleen -->
+              <input
+                type="radio"
+                id="feedbackRating5"
+                name="feedbackRating"
+                value="5"
+                required
+              />
+              <label
+                for="feedbackRating5"
+                class="feedback-modal__star feedback-modal__star--5"
+                aria-label="5 tähteä"
+              >
+                ★
+              </label>
+
+              <input
+                type="radio"
+                id="feedbackRating4"
+                name="feedbackRating"
+                value="4"
+              />
+              <label
+                for="feedbackRating4"
+                class="feedback-modal__star feedback-modal__star--4"
+                aria-label="4 tähteä"
+              >
+                ★
+              </label>
+
+              <input
+                type="radio"
+                id="feedbackRating3"
+                name="feedbackRating"
+                value="3"
+              />
+              <label
+                for="feedbackRating3"
+                class="feedback-modal__star feedback-modal__star--3"
+                aria-label="3 tähteä"
+              >
+                ★
+              </label>
+
+              <input
+                type="radio"
+                id="feedbackRating2"
+                name="feedbackRating"
+                value="2"
+              />
+              <label
+                for="feedbackRating2"
+                class="feedback-modal__star feedback-modal__star--2"
+                aria-label="2 tähteä"
+              >
+                ★
+              </label>
+
+              <input
+                type="radio"
+                id="feedbackRating1"
+                name="feedbackRating"
+                value="1"
+              />
+              <label
+                for="feedbackRating1"
+                class="feedback-modal__star feedback-modal__star--1"
+                aria-label="1 tähti"
+              >
+                ★
+              </label>
+            </div>
+          </fieldset>
+
+          <label class="feedback-modal__field">
+            <span class="feedback-modal__label">Kommentti</span>
+            <textarea
+              id="feedbackComment"
+              name="feedbackComment"
+              rows="5"
+              placeholder="Kerro lyhyesti, mikä toimi hyvin tai mitä voisi parantaa."
+            ></textarea>
+          </label>
+
+          <div class="feedback-modal__actions">
+            <button type="submit" class="form-button form-button-primary">
+              Lähetä palaute
+            </button>
+            <button type="reset" class="form-button form-button-secondary">
+              Tyhjennä kentät
+            </button>
+          </div>
+
+          <!-- Tähän näytetään käyttäjälle palaute lähetyksestä -->
+          <p
+            class="feedback-modal__status"
+            id="feedbackStatus"
+            aria-live="polite"
+          ></p>
+        </form>
+      </section>
+    </div>
+
+    <!-- Sähköpostiin lähettämisen modaali käyttää samaa rakennetta
+     kuin muutkin sivun modaalit, jotta ulkoasu ja käyttökokemus
+     pysyvät yhtenäisinä. -->
+    <div
+      id="emailModal"
+      class="contact-modal email-modal"
+      aria-hidden="true"
+      hidden
+    >
+      <!-- Taustapeite modaalin takana -->
+      <div class="contact-modal__overlay" id="emailModalOverlay"></div>
+
+      <!-- Varsinainen modaalikortti -->
+      <section
+        class="contact-modal__dialog email-modal__dialog"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="emailModalTitle"
+      >
+        <div class="contact-modal__header">
+          <h2 class="contact-modal__title" id="emailModalTitle">
+            Lähetä suositukset sähköpostiin
+          </h2>
+
+          <!-- Sulkupainike modaalin oikeassa yläkulmassa -->
+          <button
+            type="button"
+            class="contact-modal__close"
+            id="closeEmailModal"
+            aria-label="Sulje sähköpostimodaali"
+          >
+            ×
+          </button>
+        </div>
+
+        <p class="contact-modal__intro">
+          Syötä sähköpostiosoitteesi, niin voit lähettää suositukset itsellesi.
+        </p>
+
+        <!-- Lomake säilyttää vanhat ID:t, jotta nykyinen JavaScript toimii -->
+        <form id="emailForm" class="contact-modal__form">
+          <label class="contact-modal__field">
+            <span class="contact-modal__label">Sähköposti</span>
+            <input
+              type="email"
+              id="emailInput"
+              required
+              placeholder="email@example.com"
+            />
+          </label>
+
+          <div class="contact-modal__actions">
+            <button type="submit" class="form-button form-button-primary">
+              Lähetä
+            </button>
+          </div>
+        </form>
+      </section>
+    </div>
+
+    <div id="footerLayout"></div>
+
+    <script>
+      fetch("pages/base_header.html")
+        .then((res) => res.text())
+        .then(
+          (html) => (document.getElementById("headerLayout").innerHTML = html),
+        );
+
+      fetch("pages/base_footer.html")
+        .then((res) => res.text())
+        .then(
+          (html) => (document.getElementById("footerLayout").innerHTML = html),
+        );
+    </script>
+
+    <script type="module" src="./views/one_page_view.js"></script>
+  </body>
 </html>

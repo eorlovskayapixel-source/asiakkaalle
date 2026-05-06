@@ -3,8 +3,8 @@ export const translations = {
     langButton: "EN",
 
     headerLogos: [
-      "../assets/EVK_Logot_RGB_FIN_varillinen_tumma_vaaka.png",
-      "../assets/Rahoittajan_edellyttämä_tunnus_FI.png",
+      "./assets/EVK_Logot_RGB_FIN_varillinen_tumma_vaaka.png",
+      "./assets/Rahoittajan_edellyttämä_tunnus_FI.png",
     ],
 
     // Kysymykset — otsikot
@@ -207,8 +207,8 @@ export const translations = {
     langButton: "FI",
 
     headerLogos: [
-      "../assets/EVK_Logot_RGB_EN_varillinen_tumma_vaaka.png",
-      "../assets/Rahoittajan_edellyttämä_tunnus_EN.png",
+      "./assets/EVK_Logot_RGB_EN_varillinen_tumma_vaaka.png",
+      "./assets/Rahoittajan_edellyttämä_tunnus_EN.png",
     ],
 
     // Questions — headings
