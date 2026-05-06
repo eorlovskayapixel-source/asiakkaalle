@@ -1,0 +1,1448 @@
+/* =========================
+   Värit, varjot ja reunojen pyöristykset
+   ========================= */
+:root {
+  --primary-blue: #436ab3;
+  --secondary-blue: #6993cd;
+  --light-blue: #dce6f5;
+
+  --primary-purple: #826aaf;
+  --secondary-purple: #a698c9;
+  --light-purple: #e0d9ec;
+
+  --text-dark: #1f2230;
+  --text-light: #5f6475;
+
+  --background: #f7f8fc;
+  --surface: #ffffff;
+  --surface-soft: #f3f5fb;
+  --border: #d9dfec;
+
+  --shadow-soft: 0 10px 24px rgba(67, 96, 179, 0.08);
+  --shadow-card: 0 6px 16px rgba(67, 96, 179, 0.06);
+
+  --radius-lg: 22px;
+  --radius-md: 16px;
+  --radius-sm: 12px;
+}
+
+/* Pehmeä vieritys sivun sisäisille linkeille */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Sivun perusasetukset */
+body {
+  font-family: Arial, Helvetica, sans-serif;
+  min-height: 100vh;
+  background-color: var(--background);
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  margin: 0;
+}
+
+/* Sivun pääsisällön wrapper:
+   keskittää suositusnäkymän sivulle */
+.page-wrapper {
+  padding: 40px 16px;
+  display: flex;
+  justify-content: center;
+
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Erottava viiva suositusnäkymän yläpuolelle*/
+.divider {
+  height: 1px;
+  width: 100%;
+  margin: 68px 0;
+
+  background: linear-gradient(
+    to right,
+    transparent,
+    var(--secondary-blue),
+    transparent
+  );
+
+  box-shadow: 0 2px 8px
+    color-mix(in srgb, var(--secondary-blue), transparent 70%);
+}
+
+@media (max-width: 768px) {
+  .divider {
+    margin: 42px 0;
+  }
+}
+
+/***************************************Banner**************************************/
+.hero-banner {
+  position: relative;
+  max-width: 920px;
+  height: 200px;
+  max-height: 220px;
+  margin-bottom: 24px;
+  overflow: hidden;
+  border-radius: 16px;
+  
+}
+
+/* image */
+.hero-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  display: block;
+}
+
+/* Overlay  */
+.hero-banner::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(245, 241, 252, 0.7); /*224, 217, 236*/
+  z-index: 0;
+}
+
+/* Text */
+.hero-overlay {
+  position: absolute;
+  bottom: 20px;
+  left: 20px;
+  z-index: 1; /* text on top */
+  font-weight: bold;
+  pointer-events: none;
+
+    /*overlay for text 
+  background: rgba(255, 255, 255, 0.7);*/
+  padding: 6px 10px;
+  border-radius: 16px;
+}
+
+.hero-overlay .recommendation-intro {
+  color: #000000;
+}
+
+
+/* h1 */
+.hero-overlay h1 {
+  margin: 0 0 8px;
+  font-size: clamp(24px, 3vw, 28px);
+  line-height: 1.2;
+}
+
+/* <p>-text */
+.hero-overlay p {
+  margin: 0;
+  line-height: 1.5;
+  max-width: 60ch;
+  
+  /*overlay for <p>-text 
+  background: rgba(255, 255, 255, 0.7);
+  padding: 6px 10px;
+  border-radius: 6px;*/
+
+}
+/***************************************Suosituslistan  **************************************/
+/* Suosituslistan pääkontti */
+.recommendation-container {
+  width: 100%;
+  max-width: 920px;
+  position: relative;
+  overflow: hidden;
+  background-color: transparent;
+}
+
+/* Yläosan välistys ja kerrostus */
+.recommendation-header {
+  margin-bottom: 22px;
+  position: relative;
+  z-index: 1;
+}
+
+/* Pääotsikko */
+.recommendation-title {
+  font-size: 2rem;
+  line-height: 1.25;
+  margin-bottom: 16px;
+  color: var(--text-dark);
+}
+
+/* Vaiheteksti, esimerkiksi käyttäjän taso yrittäjyyspolulla */
+.recommendation-stage {
+  font-size: 1.08rem;
+  font-weight: 700;
+  color: var(--primary-purple);
+  margin-bottom: 12px;
+  line-height: 1.5;
+}
+
+/* Johdantoteksti ennen suosituksia */
+.recommendation-intro {
+  color: var(--text-light);
+  line-height: 1.7;
+  max-width: 70ch;
+}
+
+/* Suosituslistan alue, johon kortit renderöidään */
+.recommendation-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-bottom: 32px;
+  padding: 24px;
+  padding-top: 42px;
+  background-color: var(--surface-soft);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border);
+  position: relative;
+  z-index: 1;
+}
+/* Toimintopainikkeiden alue suosituslistan oikeaan yläkulmaan */
+.recommendation-list .actions {
+  position: absolute;
+  top: 8px;
+  right: 24px;
+
+  display: flex;
+  gap: 8px;
+}
+
+@media (max-width: 768px) {
+  .recommendation-list {
+    padding: 18px;
+    padding-top: 42px;
+  }
+}
+
+/* Suosituskortti yhtenäistetään modaalien ja CTA-laatikoiden kanssa.
+   Tausta pidetään pehmeänä ja reunat hieman pyöreämpinä. */
+.recommendation-card {
+  background: linear-gradient(180deg, #ffffff 0%, #f9fbff 100%);
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--primary-purple);
+  border-radius: var(--radius-md);
+  padding: 24px;
+  box-shadow: var(--shadow-card);
+  transition:
+    transform 0.22s ease,
+    box-shadow 0.22s ease,
+    border-color 0.22s ease;
+}
+
+/* Hoverissa kortti nousee kevyesti ja näyttää aktiivisemmalta,
+   mutta pysyy edelleen hillittynä. */
+.recommendation-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 24px rgba(67, 96, 179, 0.12);
+  border-color: #cfd8ea;
+}
+
+/* Kortin otsikko pidetään samassa sävymaailmassa kuin muutkin korostetut otsikot. */
+.recommendation-card-title {
+  font-size: 1.2rem;
+  margin: 6px 0 12px;
+  color: var(--primary-purple);
+  line-height: 1.35;
+  font-weight: 700;
+}
+
+/* Kuvaustekstiä väljennetään hieman, jotta kortti näyttää tasapainoisemmalta. */
+.recommendation-card-description {
+  color: var(--text-light);
+  line-height: 1.75;
+  margin-bottom: 18px;
+  max-width: 68ch;
+}
+
+/* Kortin toimintopainike yhtenäistetään muun käyttöliittymän nappien kanssa. */
+.recommendation-card-link {
+  display: inline-block;
+  padding: 12px 18px;
+  background-color: var(--primary-purple);
+  color: #ffffff;
+  text-decoration: none;
+  border-radius: 12px;
+  font-weight: 700;
+  font-size: 0.95rem;
+  box-shadow: 0 8px 18px rgba(130, 106, 175, 0.16);
+  transition:
+    background-color 0.22s ease,
+    transform 0.22s ease,
+    box-shadow 0.22s ease;
+}
+
+/* Hoverissa nappi käyttäytyy samalla tavalla kuin muut sivun päätoiminnot. */
+.recommendation-card-link:hover {
+  background-color: var(--secondary-purple);
+  transform: translateY(-2px);
+  box-shadow: 0 10px 22px rgba(130, 106, 175, 0.22);
+}
+
+/* Valintojen yhteenvetoalue */
+.recommendation-summary {
+  padding-top: 24px;
+  border-top: 1px solid var(--border);
+  position: relative;
+  z-index: 1;
+}
+
+/* Yhteenvedon otsikko */
+.summary-title {
+  font-size: 1.05rem;
+  margin-bottom: 6px;
+  color: var(--text-light);
+}
+
+/* Yhteenvedon lista */
+.summary-list {
+  list-style: none;
+  display: grid;
+  gap: 0px;
+}
+
+/* Yhteenvedon yksittäinen rivi */
+.summary-list li {
+  color: var(--text-light);
+  line-height: 1.6;
+  padding: 4px 12px;
+}
+
+/* Mahdollinen placeholder-teksti */
+.placeholder-text {
+  color: var(--text-light);
+}
+
+/* Toimintopainikkeiden alue */
+.actions {
+  display: flex;
+  gap: 16px;
+}
+
+/* Yleinen toimintopainikkeiden tyyli */
+.action-btn {
+  height: 32px;
+  background: none;
+  border: none;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.icon {
+  width: 30px;
+  height: 24px;
+  stroke: var(--primary-blue);
+  stroke-width: 1.6;
+  fill: none;
+  opacity: 0.75;
+  transition:
+    stroke 0.2s ease,
+    stroke-width 0.2s ease,
+    opacity 0.2s ease,
+    transform 0.2s ease;
+}
+
+.action-btn:hover .icon {
+  stroke-width: 2.2;
+  opacity: 1;
+  transform: scale(1.08);
+}
+
+/* Responsiiviset säädöt mobiilille */
+@media (max-width: 768px) {
+  .page-wrapper {
+    padding: 24px 12px;
+  }
+
+  .recommendation-container {
+    padding: 24px 20px;
+    padding-top: 0;
+    border-radius: 18px;
+  }
+
+  .recommendation-title {
+    font-size: 1.6rem;
+  }
+
+  .recommendation-stage {
+    font-size: 1rem;
+  }
+
+  .recommendation-card {
+    padding: 18px;
+  }
+
+  .recommendation-card-link {
+    display: block;
+    width: 100%;
+    text-align: center;
+    box-sizing: border-box;
+  }
+}
+
+/* Tyhjän tilan näkymä silloin, kun suosituksia ei ole */
+.empty-state {
+  text-align: center;
+  padding: 32px 20px;
+  background-color: var(--surface);
+  border: 1px dashed var(--border);
+  border-radius: var(--radius-sm);
+}
+
+/* Tyhjän tilan otsikko */
+.empty-state-title {
+  font-size: 1.1rem;
+  color: var(--primary-purple);
+  margin-bottom: 10px;
+}
+
+/* Tyhjän tilan kuvausteksti */
+.empty-state-text {
+  color: var(--text-light);
+  line-height: 1.6;
+  max-width: 55ch;
+  margin: 0 auto;
+}
+
+/******************************kysymysblokkin tyylit *****************************/
+
+/* Lomakkeen kokonaisrakenne */
+.question-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* Yksittäinen kysymysblokki */
+.question-form fieldset {
+  background-color: var(--surface);
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--primary-purple);
+  border-radius: var(--radius-md);
+  padding: 22px;
+  box-shadow: var(--shadow-card);
+  margin: 0;
+  min-width: 0;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* Kysymyksen otsikko */
+.question-title {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--primary-purple);
+  margin-bottom: 6px;
+  margin-top: 6px;
+  padding: 6px 12px;
+  border-radius: var(--radius-sm);
+}
+
+/* Vastausvaihtoehdot omille riveilleen */
+.question-form label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--text-dark);
+  line-height: 1.5;
+  padding: 6px 12px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+}
+
+.question-form label:hover {
+  background-color: var(--surface-soft);
+}
+
+/* Radiobuttonit ja checkboxit */
+.question-form input[type="radio"],
+.question-form input[type="checkbox"] {
+  accent-color: var(--primary-purple);
+  transform: scale(1.1);
+  flex-shrink: 0;
+}
+
+/* Alasvetovalikko tutkinnon valintaan */
+.question-select {
+  display: block;
+  width: 320px;
+  max-width: 100%;
+  min-width: 0;
+  margin-top: 8px;
+  padding: 12px 40px 12px 14px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background-color: var(--surface);
+  color: var(--text-dark);
+  font: inherit;
+  box-sizing: border-box;
+  box-shadow: var(--shadow-card);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease,
+    background-color 0.2s ease;
+}
+
+/* Fokus-tila */
+.question-select:focus {
+  outline: none;
+  border-color: var(--primary-purple);
+  box-shadow: 0 0 0 3px rgba(130, 106, 175, 0.15);
+}
+
+/* Disabled-tila kun status on "En kumpikaan" */
+.question-select:disabled {
+  background-color: var(--surface-soft);
+  color: var(--text-light);
+  cursor: not-allowed;
+}
+@media (max-width: 768px) {
+  .question-select {
+    width: 100%;
+    max-width: 320px;
+  }
+}
+
+/* Nappialue */
+.form-buttons {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-top: 8px;
+}
+
+/* Yleinen nappityyli */
+.form-button {
+  border: none;
+  border-radius: 12px;
+  padding: 12px 18px;
+  font-weight: 700;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition:
+    transform 0.2s ease,
+    background-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+/* Ensisijainen nappi */
+.form-button-primary {
+  background-color: var(--primary-purple);
+  color: #ffffff;
+}
+
+.form-button-primary:hover {
+  background-color: var(--secondary-purple);
+  transform: translateY(-1px);
+}
+
+/* Toissijainen nappi */
+.form-button-secondary {
+  background-color: var(--light-blue);
+  color: var(--primary-blue);
+}
+
+.form-button-secondary:hover {
+  background-color: #cfdcf2;
+  transform: translateY(-1px);
+}
+/***********************************************************************/
+/* Yhteydenottolaatikko saa saman hover-siirtymän kuin suosituskortit. */
+.contact-cta {
+  margin-top: 24px;
+  margin-bottom: 24px;
+  padding: 24px;
+  background: linear-gradient(180deg, #f7f9fe 0%, #eef3fb 100%);
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--primary-blue);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-card);
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 20px;
+  transition:
+    transform 0.22s ease,
+    box-shadow 0.22s ease,
+    border-color 0.22s ease;
+}
+
+/* Hover-tila kopioidaan suosituskortilta sellaisenaan. */
+.contact-cta:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 24px rgba(67, 96, 179, 0.12);
+  border-color: #cfd8ea;
+}
+
+/* Yläosan CTA-boksi saa hieman lisää hengitystilaa kyselyyn nähden */
+.contact-cta--top {
+  margin-top: 12px;
+  margin-bottom: 28px;
+}
+
+/* Tulosten yhteydessä oleva CTA erotetaan selkeästi yhteenvetoalueesta */
+.contact-cta--result {
+  margin-top: 28px;
+}
+
+/* CTA-boksin tekstisisältö */
+.contact-cta__content {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* CTA-boksin otsikko */
+.contact-cta__title {
+  font-size: 1.15rem;
+  color: var(--primary-purple);
+  margin: 0;
+}
+
+/* CTA-boksin seliteteksti */
+.contact-cta__text {
+  margin: 0;
+  color: var(--text-light);
+  line-height: 1.6;
+  max-width: 62ch;
+}
+
+/* Yhteydenottopainikkeen oma perustyyli:
+   - normaalitilassa vaalea lila tausta
+   - tumma lila teksti
+   - oma tyyli ohittaa yleisen primary-button-värin vain tässä painikkeessa
+*/
+.contact-cta__button {
+  flex-shrink: 0;
+  margin-top: 12px;
+  background-color: #826aaf;
+  color: #ffffff;
+  transition:
+    background-color 0.25s ease,
+    color 0.25s ease,
+    box-shadow 0.25s ease,
+    transform 0.25s ease;
+}
+
+/* Estää taustasivun vierityksen silloin, kun modaali on auki */
+body.modal-open {
+  overflow: hidden;
+}
+
+/* Modaalin koko ruudun kattava wrapper */
+.contact-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 1200;
+}
+
+/* Tumma taustapeite modaalin takana */
+.contact-modal__overlay {
+  position: absolute;
+  inset: 0;
+  background-color: rgba(18, 24, 38, 0.6);
+}
+
+/* Modaalin laatikko pidetään ruudun sisällä myös pienillä näytöillä.
+   border-box varmistaa, että padding ei kasvata laatikkoa ruudun yli. */
+.contact-modal__dialog {
+  position: relative;
+  z-index: 1;
+  width: min(92vw, 640px);
+  max-width: 640px;
+  margin: 8vh auto 0;
+  background-color: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  box-shadow: 0 18px 42px rgba(31, 34, 48, 0.2);
+  padding: 28px;
+  box-sizing: border-box;
+  max-height: calc(100vh - 32px);
+  overflow-y: auto;
+}
+
+/* Modaalin otsikon ja sulkupainikkeen asettelu */
+.contact-modal__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+  margin-bottom: 12px;
+}
+
+/* Modaalin otsikko */
+.contact-modal__title {
+  margin: 0;
+  font-size: 1.35rem;
+  color: var(--primary-purple);
+}
+
+/* Sulkupainike modaalin oikeassa yläkulmassa */
+.contact-modal__close {
+  border: none;
+  background: transparent;
+  color: var(--text-light);
+  font-size: 1.8rem;
+  line-height: 1;
+  cursor: pointer;
+  padding: 0;
+}
+
+/* Johdantoteksti modaalin otsikon alla */
+.contact-modal__intro {
+  margin: 0 0 20px;
+  color: var(--text-light);
+  line-height: 1.6;
+}
+
+/* Modaalin lomakekentät allekkain */
+.contact-modal__form {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+/* Yksittäinen kenttäryhmä */
+.contact-modal__field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* Kentän otsikko */
+.contact-modal__label {
+  font-weight: 700;
+  color: var(--text-dark);
+}
+
+/* Syötekenttien yhteinen ulkoasu modaalissa */
+.contact-modal__form input,
+.contact-modal__form textarea {
+  width: 100%;
+  padding: 12px 14px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  font: inherit;
+  color: var(--text-dark);
+  background-color: #ffffff;
+  box-sizing: border-box;
+}
+
+/* Fokus-tila kentissä */
+.contact-modal__form input:focus,
+.contact-modal__form textarea:focus {
+  outline: 2px solid rgba(130, 106, 175, 0.2);
+  border-color: var(--primary-purple);
+}
+
+/* Kommenttikentän pystykoko */
+.contact-modal__form textarea {
+  resize: vertical;
+  min-height: 120px;
+}
+
+/* Painikkeet modaalin sisällä */
+.contact-modal__actions {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+/* Käyttäjälle näytettävä tilaviesti */
+.contact-modal__status {
+  min-height: 24px;
+  margin: 0;
+  font-weight: 700;
+}
+
+/* Onnistumisviesti */
+.contact-modal__status--success {
+  color: var(--primary-blue);
+}
+
+/* Virheviesti */
+.contact-modal__status--error {
+  color: #b42318;
+}
+
+/* Mobiilissa CTA pinoutuu allekkain ja modaali venyy paremmin näytölle */
+@media (max-width: 768px) {
+  .contact-cta {
+    flex-direction: column;
+    align-items: stretch;
+    padding: 20px;
+  }
+
+  .contact-cta__button {
+    width: 100%;
+    margin-top: 4px;
+  }
+
+  /* Mobiilissa modaali jätetään hieman sisään reunoista,
+   jotta se ei osu näytön laitoihin eikä mene yli. */
+  .contact-modal__dialog {
+    width: calc(100vw - 24px);
+    max-width: 640px;
+    margin-top: 16px;
+    padding: 18px;
+    max-height: calc(100vh - 24px);
+  }
+
+  .contact-modal__actions .form-button {
+    width: 100%;
+  }
+}
+
+/* Palautelaatikko saa saman hover-siirtymän kuin suosituskortit. */
+.feedback-cta {
+  margin-top: 24px;
+  margin-bottom: 24px;
+  padding: 24px;
+  background: linear-gradient(180deg, #f7f9fe 0%, #eef3fb 100%);
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--primary-blue);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-card);
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 20px;
+  transition:
+    transform 0.22s ease,
+    box-shadow 0.22s ease,
+    border-color 0.22s ease;
+}
+
+/* Hover-tila kopioidaan suosituskortilta sellaisenaan. */
+.feedback-cta:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 24px rgba(67, 96, 179, 0.12);
+  border-color: #cfd8ea;
+}
+
+/* Palautekortin tekstisisältö */
+.feedback-cta__content {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* Palautekortin otsikko */
+.feedback-cta__title {
+  font-size: 1.15rem;
+  color: var(--primary-purple);
+  margin: 0;
+}
+
+/* Palautekortin seliteteksti */
+.feedback-cta__text {
+  margin: 0;
+  color: var(--text-light);
+  line-height: 1.6;
+  max-width: 62ch;
+}
+
+/* Palautepainikkeen perustyyli:
+   - normaalitilassa tumma sininen tausta
+   - vaalea sininen teksti
+*/
+.feedback-cta__button {
+  flex-shrink: 0;
+  margin-top: 12px;
+  background-color: #436ab3;
+  color: #dce6f5;
+  transition:
+    background-color 0.25s ease,
+    color 0.25s ease,
+    box-shadow 0.25s ease,
+    transform 0.25s ease;
+}
+
+/* Palautepainikkeelle pehmeä hover-animaatio:
+   - väri muuttuu hieman voimakkaammaksi
+   - nappi nousee vähän
+   - mukaan lisätään kevyt heilautus
+*/
+.feedback-cta__button:hover {
+  background-color: #6993cd; /* hieman nykyistä vaaleaa lilaa syvempi sävy */
+  color: #ffffff;
+  transform: translateY(-2px);
+  box-shadow: 0 10px 22px rgba(130, 106, 175, 0.2);
+  text-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
+  animation: feedbackButtonWiggle 0.45s ease-in-out;
+}
+
+/* Painalluksessa nappi palautuu hieman alemmas,
+   jotta klikkaus tuntuu luonnolliselta */
+.feedback-cta__button:active {
+  transform: translateY(0);
+}
+
+/* Kevyt sivuttaisheilautus hoveriin */
+@keyframes feedbackButtonWiggle {
+  0% {
+    transform: translateY(-2px) rotate(0deg);
+  }
+  25% {
+    transform: translateY(-2px) rotate(1.5deg);
+  }
+  50% {
+    transform: translateY(-2px) rotate(-1.5deg);
+  }
+  75% {
+    transform: translateY(-2px) rotate(1deg);
+  }
+  100% {
+    transform: translateY(-2px) rotate(0deg);
+  }
+}
+
+/* Koko ruudun kattava palautemodaali */
+.feedback-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 1250;
+}
+
+/* Tumma taustapeite palautemodaalin takana */
+.feedback-modal__overlay {
+  position: absolute;
+  inset: 0;
+  background-color: rgba(18, 24, 38, 0.6);
+}
+
+/* Sama korjaus palautemodaaliin,
+   jotta laatikko pysyy ruudun sisällä myös mobiilissa. */
+.feedback-modal__dialog {
+  position: relative;
+  z-index: 1;
+  width: min(92vw, 640px);
+  max-width: 640px;
+  margin: 8vh auto 0;
+  background-color: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  box-shadow: 0 18px 42px rgba(31, 34, 48, 0.2);
+  padding: 28px;
+  box-sizing: border-box;
+  max-height: calc(100vh - 32px);
+  overflow-y: auto;
+}
+
+/* Otsikon ja sulkupainikkeen asettelu */
+.feedback-modal__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+  margin-bottom: 12px;
+}
+
+/* Palautemodaalin otsikko */
+.feedback-modal__title {
+  margin: 0;
+  font-size: 1.35rem;
+  color: var(--primary-purple);
+}
+
+/* Sulkupainike modaalin oikeassa yläkulmassa */
+.feedback-modal__close {
+  border: none;
+  background: transparent;
+  color: var(--text-light);
+  font-size: 1.8rem;
+  line-height: 1;
+  cursor: pointer;
+  padding: 0;
+}
+
+/* Johdantoteksti otsikon alla */
+.feedback-modal__intro {
+  margin: 0 0 20px;
+  color: var(--text-light);
+  line-height: 1.6;
+}
+
+/* Lomakekentät allekkain */
+.feedback-modal__form {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+/* Tähtiarvioinnin kenttä keskitetään selkeämmin modaalin sisällä,
+   jotta arviointialue näyttää tarkoitukselliselta eikä hajanaiselta. */
+.feedback-modal__field {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  border: none;
+  padding: 0;
+  margin: 0;
+}
+
+/* Tähtiarvioinnin otsikko keskitetään visuaalisesti laatikon yläpuolelle */
+.feedback-modal__field:first-of-type .feedback-modal__label {
+  text-align: center;
+}
+
+/* Kentän otsikko */
+.feedback-modal__label {
+  font-weight: 700;
+  color: var(--text-dark);
+}
+
+/* Tähtiarviointi pidetään kompaktina ja keskitettynä,
+   jotta tähdet näkyvät tasaisesti eivätkä huku liian leveään laatikkoon. */
+.feedback-modal__rating-group {
+  display: inline-flex;
+  flex-direction: row-reverse;
+  justify-content: center;
+  gap: 8px;
+  padding: 14px 18px;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  background: linear-gradient(135deg, #f7f9fe 0%, #dce6f5 45%, #e0d9ec 100%);
+  width: fit-content;
+  min-width: 0;
+  align-self: center;
+  box-shadow: var(--shadow-card);
+}
+
+/* Radio-inputit piilotetaan näkymästä,
+   mutta ne pidetään mukana lomakelogiikkaa varten. */
+.feedback-modal__rating-group input[type="radio"] {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* Tähdet näkyvät jo oletustilassa selkeästi,
+   jotta käyttäjä hahmottaa heti arviointialueen ilman hoveria. */
+.feedback-modal__star {
+  font-size: 2.35rem;
+  line-height: 1;
+  cursor: pointer;
+  color: #9fb4dd;
+  transition:
+    color 0.24s ease,
+    transform 0.24s ease,
+    text-shadow 0.24s ease,
+    filter 0.24s ease,
+    opacity 0.24s ease;
+  opacity: 0.95;
+}
+
+/* Jokaiselle tähdelle annetaan hieman eri aktiivinen sävy,
+   jotta valittu tähtirivi näyttää pehmeästi voimistuvan. */
+.feedback-modal__star--1 {
+  --star-active: #6993cd;
+}
+
+.feedback-modal__star--2 {
+  --star-active: #7b8fcf;
+}
+
+.feedback-modal__star--3 {
+  --star-active: #8f88c8;
+}
+
+.feedback-modal__star--4 {
+  --star-active: #9a82c1;
+}
+
+.feedback-modal__star--5 {
+  --star-active: #826aaf;
+}
+
+/* Hover-tilassa tähdet korostuvat pehmeästi mutta selvästi. */
+.feedback-modal__star:hover,
+.feedback-modal__star:hover ~ .feedback-modal__star {
+  color: var(--star-active);
+  transform: translateY(-1px) scale(1.04);
+  text-shadow: 0 3px 8px rgba(130, 106, 175, 0.18);
+  filter: saturate(1.05);
+  opacity: 1;
+}
+
+/* Valittu tähtimäärä jää näkyviin selkeänä ja hieman voimakkaampana. */
+.feedback-modal__rating-group
+  input[type="radio"]:checked
+  ~ .feedback-modal__star {
+  color: var(--star-active);
+  text-shadow: 0 3px 8px rgba(130, 106, 175, 0.2);
+  filter: saturate(1.08);
+  opacity: 1;
+}
+
+/* Näppäimistökäyttäjälle näkyvä fokus korostaa valittavaa tähteä */
+.feedback-modal__rating-group
+  input[type="radio"]:focus
+  + .feedback-modal__star {
+  outline: 2px solid rgba(130, 106, 175, 0.22);
+  outline-offset: 4px;
+  border-radius: 8px;
+}
+
+/* Kommenttikentän ulkoasu */
+.feedback-modal__form textarea {
+  width: 100%;
+  padding: 12px 14px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  font: inherit;
+  color: var(--text-dark);
+  background-color: #ffffff;
+  box-sizing: border-box;
+  resize: vertical;
+  min-height: 120px;
+}
+
+/* Kommenttikentän fokus-tila */
+.feedback-modal__form textarea:focus {
+  outline: 2px solid rgba(130, 106, 175, 0.2);
+  border-color: var(--primary-purple);
+}
+
+/* Painikkeiden asettelu modaalissa */
+.feedback-modal__actions {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+/* Käyttäjälle näytettävä tilaviesti */
+.feedback-modal__status {
+  min-height: 24px;
+  margin: 0;
+  font-weight: 700;
+}
+
+/* Onnistumisviesti */
+.feedback-modal__status--success {
+  color: var(--primary-blue);
+}
+
+/* Virheviesti */
+.feedback-modal__status--error {
+  color: #b42318;
+}
+
+/* Mobiilissa palautekortti ja modaali pinoutuvat siististi */
+@media (max-width: 768px) {
+  .feedback-cta {
+    flex-direction: column;
+    align-items: stretch;
+    padding: 20px;
+  }
+
+  .feedback-cta__button {
+    width: 100%;
+    margin-top: 4px;
+  }
+
+  /* Sama mobiilikorjaus palautemodaaliin,
+   jotta myös se pysyy siististi ruudun sisällä. */
+  .feedback-modal__dialog {
+    width: calc(100vw - 24px);
+    max-width: 640px;
+    margin-top: 16px;
+    padding: 18px;
+    max-height: calc(100vh - 24px);
+  }
+
+  /* Mobiilissa tähtiboksi pidetään tähtien levyisenä,
+   jotta se ei veny turhaan koko rivin levyiseksi. */
+  .feedback-modal__rating-group {
+    width: max-content;
+    max-width: calc(100vw - 80px);
+    min-width: 0;
+    justify-content: center;
+    padding: 12px 14px;
+    gap: 5px;
+    align-self: center;
+    margin: 0 auto;
+  }
+
+  .feedback-modal__star {
+    font-size: 2.2rem;
+  }
+
+  .feedback-modal__actions .form-button {
+    width: 100%;
+  }
+}
+
+/* ******************Sähköpostilomakkeen modaalin tyyli *************************/
+[hidden] {
+  display: none !important;
+}
+
+/* Email-modaali käyttää samoja perusluokkia kuin contact-modaali.
+   Tähän lisätään vain emailille omat pienet leveyssäätö ja input-erikoisuus. */
+.email-modal__dialog {
+  max-width: 480px;
+}
+
+/* Email-input käyttää samaa perusilmettä kuin muut modaalikentät. */
+.email-modal .contact-modal__form input {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* Mobiilissa email-modaali pysyy kompaktina ja ruudun sisällä. */
+@media (max-width: 768px) {
+  .email-modal__dialog {
+    width: calc(100vw - 24px);
+    max-width: 480px;
+    margin-top: 16px;
+    padding: 18px;
+    max-height: calc(100vh - 24px);
+  }
+}
+
+/* ***********************************************************************************/
+
+/* Yleinen navigaatiopalkki */
+.navbar {
+  display: flex;
+  align-items: center;
+  padding: 10px 20px;
+  background: transparent;
+  border: none;
+  gap: 12px;
+}
+
+/* logo */
+.navbar-logo {
+  height: 40px;
+  width: auto;
+  margin: 0;
+  padding: 0;
+}
+
+.navbar-logo-karelia {
+  height: 40px;
+  width: auto;
+  display: block;
+}
+
+/* left group */
+.navbar-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  min-width: 0;
+}
+
+/* Container for language logos */
+.header-logos {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  flex-wrap: wrap;
+  max-width: 100%;
+  min-width: 0;
+}
+/* Language logos - just images */
+.header-logo {
+  height: 40px;
+  width: auto;
+  display: block;
+  margin: 0;
+  padding: 0;
+}
+
+@media (max-width: 768px) {
+  .navbar-left {
+    flex-wrap: wrap;
+  }
+
+  .header-logos {
+    width: 100%;
+    justify-content: flex-start;
+  }
+}
+
+/* Footerin tyyli */
+.footer {
+  background-color: var(--primary-purple);
+  color: #ffffff;
+  padding: 24px 20px;
+  text-align: center;
+  margin-top: auto;
+}
+
+.footer-content {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.footer-links {
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+  margin-top: 12px;
+}
+
+.footer-links a {
+  color: #ffffff;
+  text-decoration: none;
+}
+
+.footer-links a:hover {
+  text-decoration: underline;
+}
+
+/* Progress bar -tyylit */
+#progress-bar-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 8px;
+  background-color: var(--light-blue);
+  z-index: 9999;
+  transition: width 0.3s ease;
+}
+
+#progress-bar {
+  height: 100%;
+  background-color: var(--primary-blue);
+  width: 0%;
+  transition: width 0.3s ease;
+}
+
+.hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* =========================================================
+   YHTEYDENOTTOPAINIKKEEN HOVER-ANIMAATIO
+   Tämä koskee vain yhteydenottoboksien painikkeita
+   ========================================================= */
+
+/* Perustila:
+   - transition tekee värin- ja varjonvaihdosta pehmeän
+   - transform tarvitaan, jotta hover-animaatio toimii sulavasti
+*/
+.contact-cta__button {
+  transition:
+    background-color 0.25s ease,
+    color 0.25s ease,
+    box-shadow 0.25s ease,
+    transform 0.25s ease;
+}
+
+/* Hover-tilassa värit vaihtuvat toisinpäin:
+   - vaalea tausta
+   - tumma teksti
+   - kevyt nousu ja heilautus
+*/
+.contact-cta__button:hover {
+  background-color: #a698c9;
+  color: #ffffff;
+  transform: translateY(-2px);
+  box-shadow: 0 10px 22px rgba(130, 106, 175, 0.22);
+  text-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
+  animation: contactButtonWiggle 0.45s ease-in-out;
+}
+
+/* Kun nappia painetaan hiirellä,
+   liike rauhoitetaan vähän alemmas, jotta tuntuma on luonnollinen
+*/
+.contact-cta__button:active {
+  transform: translateY(0);
+}
+
+/* Tämä animaatio tekee pienen sivuttaisen heilahduksen.
+   Liike pidetään tarkoituksella maltillisena, ettei nappi näytä rikkonaiselta.
+*/
+@keyframes contactButtonWiggle {
+  0% {
+    transform: translateY(-2px) rotate(0deg);
+  }
+  25% {
+    transform: translateY(-2px) rotate(1.5deg);
+  }
+  50% {
+    transform: translateY(-2px) rotate(-1.5deg);
+  }
+  75% {
+    transform: translateY(-2px) rotate(1deg);
+  }
+  100% {
+    transform: translateY(-2px) rotate(0deg);
+  }
+}
+
+/* Tämä huomioi käyttäjät, jotka eivät halua animaatioita.
+   Silloin nappi vaihtaa vain väriä ilman heilumista.
+*/
+@media (prefers-reduced-motion: reduce) {
+  .contact-cta__button:hover {
+    animation: none;
+  }
+}
+/* Kielenvaihtopainike*/
+.lang-toggle-btn {
+  margin-left: auto;
+  background-color: var(--light-purple);
+  color: var(--primary-purple);
+  border: 2px solid var(--primary-purple);
+  border-radius: 999px;
+  padding: 6px 16px;
+  font-weight: 700;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  align-self: flex-end;
+}
+
+.lang-toggle-btn:hover {
+  background-color: var(--secondary-purple);
+  color: #ffffff;
+}
+
+/* Kosketuslaitteilla hover-efektiä ei käytetä. */
+@media (hover: none) {
+  .contact-cta:hover,
+  .feedback-cta:hover {
+    transform: none;
+    box-shadow: var(--shadow-card);
+    border-color: var(--border);
+  }
+}
+
+
+
+.question-skeleton {
+  height: 120px;
+  border-radius: 16px;
+  border: 1px solid var(--border);
+  background: linear-gradient(90deg, #f0f2f8 25%, #e5e9f5 37%, #f0f2f8 63%);
+  background-size: 400% 100%;
+  animation: skeleton 1.2s infinite;
+  margin-bottom: 16px;
+}
+
+@keyframes skeleton {
+  0% { background-position: 100% 0; }
+  100% { background-position: 0 0; }
+}
