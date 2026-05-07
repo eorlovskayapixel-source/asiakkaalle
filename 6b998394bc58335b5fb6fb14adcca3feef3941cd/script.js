@@ -13,6 +13,6 @@ async function login() {
   
 const repoName = window.location.pathname.split('/')[1];
 
-  window.location.href = `/${repoName}/${hash}/pages/index_banner.html`;
+  window.location.href = `/${repoName}/${hash}/index.html`;
 
 }

@@ -4,6 +4,7 @@ export class QuestionRenderer {
     questions,
     getQuestionText,
     getAnswerTexts,
+    getPlaceholderText,
     onChange = null,
     onSubmit = null,
   }) {
@@ -11,6 +12,8 @@ export class QuestionRenderer {
     this.questions = questions; // Kysymysobjektien lista, jotka määrittelevät lomakkeen rakenteen ja sisällön
     this.getQuestionText = getQuestionText; // Funktio, joka palauttaa kysymystekstin kysymyksen ID:n perusteella
     this.getAnswerTexts = getAnswerTexts; // Funktio, joka palauttaa vastaustekstit tietyn kysymyksen ID:n perusteella
+    this.getPlaceholderText = getPlaceholderText; // Funktio, joka palauttaa paikka-tekstin tietyn kysymyksen ID:n perusteella
+
     this.onChange = onChange; // Callback-funktio, joka kutsutaan aina, kun käyttäjä muuttaa vastaustaan.
     // Tämän avulla voidaan esimerkiksi päivittää edistymispalkki reaaliajassa.
 
@@ -167,7 +170,11 @@ export class QuestionRenderer {
     placeholder.disabled = true;
     placeholder.selected = true;
     placeholder.hidden = true;
-    placeholder.textContent = question.placeholder || "—";
+    const translatedPlaceholder = this.getPlaceholderText
+    ? this.getPlaceholderText(question.id)
+    : null;
+
+    placeholder.textContent = translatedPlaceholder || question.placeholder || "—";
     select.appendChild(placeholder);
 
     const answerTexts = this.getAnswerTexts(question.id);

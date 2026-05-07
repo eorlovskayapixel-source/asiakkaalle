@@ -40,6 +40,18 @@ function getQuestionText(questionId) {
   return translated ?? question.text;
 }
 
+function getPlaceholderText(questionId) {
+  const t = getT();
+  const question = questions.find((q) => q.id === questionId);
+
+  if (!question) return "—";
+
+  const translated = t[`q${questionId}_placeholder`];
+
+  return translated ?? question.placeholder ?? "—";
+}
+
+
 // Käsittelee kyselylomakkeen lähetyksen QuestionRenderer-luokan avulla.
 function handleSubmit() {
   const validation = renderer.validate();
@@ -69,6 +81,7 @@ export function initQuestions() {
     questions,
     getQuestionText,
     getAnswerTexts,
+    getPlaceholderText,
     onChange: () => {
       updateProgressBar(renderer);
     },
