@@ -5,6 +5,7 @@ export class QuestionRenderer {
     getQuestionText,
     getAnswerTexts,
     getPlaceholderText,
+    getButtonTexts,
     onChange = null,
     onSubmit = null,
   }) {
@@ -13,7 +14,7 @@ export class QuestionRenderer {
     this.getQuestionText = getQuestionText; // Funktio, joka palauttaa kysymystekstin kysymyksen ID:n perusteella
     this.getAnswerTexts = getAnswerTexts; // Funktio, joka palauttaa vastaustekstit tietyn kysymyksen ID:n perusteella
     this.getPlaceholderText = getPlaceholderText; // Funktio, joka palauttaa paikka-tekstin tietyn kysymyksen ID:n perusteella
-
+    this.getButtonTexts = getButtonTexts; // Funktio, joka palauttaa napin tekstit (esim. submit ja reset) tietyn kysymyksen ID:n perusteella
     this.onChange = onChange; // Callback-funktio, joka kutsutaan aina, kun käyttäjä muuttaa vastaustaan.
     // Tämän avulla voidaan esimerkiksi päivittää edistymispalkki reaaliajassa.
 
@@ -47,8 +48,10 @@ export class QuestionRenderer {
   //    ja asettaa niille event listenerit, jotka kutsuvat onSubmit- ja reset-metodeja.
   renderButtons() {
     const submitBtn = document.createElement("button");
-    submitBtn.type = "button";
-    submitBtn.textContent = "Näytä tulokset";
+    const { submitText, resetText } = this.getButtonTexts();
+    submitBtn.type = "button";    
+    submitBtn.textContent = submitText;
+
     submitBtn.classList.add("form-button", "form-button-primary");
 
     if (this.onSubmit) {
@@ -57,7 +60,7 @@ export class QuestionRenderer {
 
     const resetBtn = document.createElement("button");
     resetBtn.type = "reset";
-    resetBtn.textContent = "Tyhjennä lomake";
+    resetBtn.textContent = resetText;
     resetBtn.classList.add("form-button", "form-button-secondary");
 
     const wrapper = document.createElement("div");

@@ -52,6 +52,16 @@ function getPlaceholderText(questionId) {
 }
 
 
+function getButtonTexts() {
+  const t = getT();
+  return {
+    submitText: t.showResults,
+    resetText: t.clearForm,
+  };
+}
+
+
+
 // Käsittelee kyselylomakkeen lähetyksen QuestionRenderer-luokan avulla.
 function handleSubmit() {
   const validation = renderer.validate();
@@ -82,6 +92,7 @@ export function initQuestions() {
     getQuestionText,
     getAnswerTexts,
     getPlaceholderText,
+    getButtonTexts,
     onChange: () => {
       updateProgressBar(renderer);
     },
